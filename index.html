@@ -1,19 +1,21 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Text Cipher</title>
+    <title>تشفير وفك التشفير (عربي & إنجليزي)</title>
     <style>
       body {
         font-family: Arial, sans-serif;
         text-align: center;
         margin: 50px;
+        direction: rtl;
       }
       .container {
         display: flex;
         justify-content: center;
         gap: 50px;
+        flex-wrap: wrap;
       }
       .section {
         border: 2px solid #333;
@@ -25,91 +27,100 @@
         width: 100%;
         height: 80px;
         margin-bottom: 10px;
+        text-align: right;
       }
       button {
         width: 100%;
         padding: 10px;
         cursor: pointer;
         margin-top: 5px;
-        margin-bottom: 10px;
       }
       .output {
         font-weight: bold;
         color: blue;
         margin-top: 10px;
+        word-wrap: break-word;
       }
     </style>
   </head>
   <body>
-    <h2>Simple Text Cipher</h2>
+    <h2>تشفير النصوص (عربي & إنجليزي)</h2>
 
     <div class="container">
-      <!-- Cipher Section -->
       <div class="section">
-        <h3>Cipher Text</h3>
-        <textarea
-          id="inputText"
-          placeholder="Enter text to cipher..."
-        ></textarea>
-        <button onclick="cipherText()">Cipher</button>
-
-        <p>Ciphered</p>
+        <h3>تشفير النص</h3>
+        <textarea id="inputText" placeholder="أدخل النص هنا..."></textarea>
+        <button onclick="cipherText()">تشفير</button>
         <p class="output" id="cipherOutput"></p>
       </div>
 
-      <!-- Decipher Section -->
       <div class="section">
-        <h3>Decipher Text</h3>
+        <h3>فك التشفير</h3>
         <textarea
           id="cipheredText"
-          placeholder="Paste ciphered text..."
+          placeholder="ألصق النص المشفر هنا..."
         ></textarea>
-        <button onclick="decipherText()">Decipher</button>
-        <p>Deciphered</p>
+        <button onclick="decipherText()">فك التشفير</button>
         <p class="output" id="decipherOutput"></p>
       </div>
     </div>
 
     <script>
-      function shiftChar(char, shift) {
-        if (char >= "a" && char <= "z") {
-          return String.fromCharCode(
-            ((char.charCodeAt(0) - 97 + shift + 26) % 26) + 97
-          );
+      function shiftChar(char, shift, alphabet) {
+        let index = alphabet.indexOf(char);
+        if (index !== -1) {
+          return alphabet[(index + shift + alphabet.length) % alphabet.length];
         }
-        if (char >= "A" && char <= "Z") {
-          return String.fromCharCode(
-            ((char.charCodeAt(0) - 65 + shift + 26) % 26) + 65
-          );
-        }
-        return char; // Keep spaces and special characters unchanged
+        return char; // Keep spaces & special characters unchanged
       }
 
       function cipher(text) {
+        const arabicAlphabet = "ابتثجحخدذرزسشصضطظعغفقكلمنهوي"; // Arabic letters
+        const englishAlphabet = "abcdefghijklmnopqrstuvwxyz";
+        const englishAlphabetUpper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
         return text
           .split("")
-          .map((char) => shiftChar(char, 1))
+          .map(
+            (char) =>
+              shiftChar(char, 1, arabicAlphabet) ||
+              shiftChar(char, 1, englishAlphabet) ||
+              shiftChar(char, 1, englishAlphabetUpper) ||
+              char
+          )
           .join("");
       }
 
       function decipher(text) {
+        const arabicAlphabet = "ابتثجحخدذرزسشصضطظعغفقكلمنهوي";
+        const englishAlphabet = "abcdefghijklmnopqrstuvwxyz";
+        const englishAlphabetUpper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
         return text
           .split("")
-          .map((char) => shiftChar(char, -1))
+          .map(
+            (char) =>
+              shiftChar(char, -1, arabicAlphabet) ||
+              shiftChar(char, -1, englishAlphabet) ||
+              shiftChar(char, -1, englishAlphabetUpper) ||
+              char
+          )
           .join("");
       }
 
       function cipherText() {
         let input = document.getElementById("inputText").value;
         let ciphered = cipher(input);
-        document.getElementById("cipherOutput").innerText = ciphered;
-        document.getElementById("cipheredText").value = ciphered; // Auto-fill the decipher field
+        document.getElementById("cipherOutput").innerText =
+          "النص المشفر: " + ciphered;
+        document.getElementById("cipheredText").value = ciphered;
       }
 
       function decipherText() {
         let input = document.getElementById("cipheredText").value;
         let deciphered = decipher(input);
-        document.getElementById("decipherOutput").innerText = deciphered;
+        document.getElementById("decipherOutput").innerText =
+          "النص المفكوك: " + deciphered;
       }
     </script>
   </body>
