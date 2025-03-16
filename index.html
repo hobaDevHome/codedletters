@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Text Cipher</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        text-align: center;
+        margin: 50px;
+      }
+      .container {
+        display: flex;
+        justify-content: center;
+        gap: 50px;
+      }
+      .section {
+        border: 2px solid #333;
+        padding: 20px;
+        border-radius: 10px;
+        width: 300px;
+      }
+      textarea {
+        width: 100%;
+        height: 80px;
+        margin-bottom: 10px;
+      }
+      button {
+        width: 100%;
+        padding: 10px;
+        cursor: pointer;
+        margin-top: 5px;
+        margin-bottom: 10px;
+      }
+      .output {
+        font-weight: bold;
+        color: blue;
+        margin-top: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>Simple Text Cipher</h2>
+
+    <div class="container">
+      <!-- Cipher Section -->
+      <div class="section">
+        <h3>Cipher Text</h3>
+        <textarea
+          id="inputText"
+          placeholder="Enter text to cipher..."
+        ></textarea>
+        <button onclick="cipherText()">Cipher</button>
+
+        <p>Ciphered</p>
+        <p class="output" id="cipherOutput"></p>
+      </div>
+
+      <!-- Decipher Section -->
+      <div class="section">
+        <h3>Decipher Text</h3>
+        <textarea
+          id="cipheredText"
+          placeholder="Paste ciphered text..."
+        ></textarea>
+        <button onclick="decipherText()">Decipher</button>
+        <p>Deciphered</p>
+        <p class="output" id="decipherOutput"></p>
+      </div>
+    </div>
+
+    <script>
+      function shiftChar(char, shift) {
+        if (char >= "a" && char <= "z") {
+          return String.fromCharCode(
+            ((char.charCodeAt(0) - 97 + shift + 26) % 26) + 97
+          );
+        }
+        if (char >= "A" && char <= "Z") {
+          return String.fromCharCode(
+            ((char.charCodeAt(0) - 65 + shift + 26) % 26) + 65
+          );
+        }
+        return char; // Keep spaces and special characters unchanged
+      }
+
+      function cipher(text) {
+        return text
+          .split("")
+          .map((char) => shiftChar(char, 1))
+          .join("");
+      }
+
+      function decipher(text) {
+        return text
+          .split("")
+          .map((char) => shiftChar(char, -1))
+          .join("");
+      }
+
+      function cipherText() {
+        let input = document.getElementById("inputText").value;
+        let ciphered = cipher(input);
+        document.getElementById("cipherOutput").innerText = ciphered;
+        document.getElementById("cipheredText").value = ciphered; // Auto-fill the decipher field
+      }
+
+      function decipherText() {
+        let input = document.getElementById("cipheredText").value;
+        let deciphered = decipher(input);
+        document.getElementById("decipherOutput").innerText = deciphered;
+      }
+    </script>
+  </body>
+</html>
